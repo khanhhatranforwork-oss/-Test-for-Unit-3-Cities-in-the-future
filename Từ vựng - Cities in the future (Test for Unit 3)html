@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trắc nghiệm từ vựng: Cities in the future (Phần 3)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#12301f;
+    --ink-soft:#3f5548;
+    --paper:#eef3ec;
+    --card:#ffffff;
+    --amber:#c8871a;
+    --amber-deep:#a86e10;
+    --good:#1f7a4d;
+    --good-bg:#e3f3e8;
+    --bad:#b23b2e;
+    --bad-bg:#fbe7e3;
+    --line: rgba(18,48,31,0.16);
+    --serif: 'Fraunces', Georgia, serif;
+    --sans: 'Inter', system-ui, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding:32px 16px 64px;
+    line-height:1.5;
+  }
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background-image: linear-gradient(var(--line) 1px, transparent 1px);
+    background-size: 100% 120px;
+    opacity:0.35;
+    z-index:0;
+  }
+  .wrap{ position:relative; z-index:1; width:100%; max-width:620px; }
+  header.top{
+    display:flex; align-items:baseline; justify-content:space-between;
+    margin-bottom:22px; gap:12px;
+  }
+  header.top h1{
+    font-family:var(--serif); font-size:21px; font-weight:600; margin:0; letter-spacing:-0.01em;
+  }
+  header.top .tag{ font-size:13px; color:var(--ink-soft); white-space:nowrap; }
+  .progress-track{
+    height:6px; background:rgba(18,48,31,0.12); border-radius:3px; overflow:hidden; margin-bottom:36px;
+  }
+  .progress-fill{ height:100%; background:var(--amber); width:0%; transition:width .35s ease; }
+
+  .card{ background:var(--card); border:2px solid var(--ink); border-radius:6px; padding:32px 28px; }
+  .qmeta{ display:flex; justify-content:space-between; align-items:center; font-size:13px; color:var(--ink-soft); margin-bottom:18px; }
+  .prompt-label{ font-size:13px; color:var(--ink-soft); margin-bottom:6px; }
+  .term{ font-family:var(--serif); font-size:26px; font-weight:700; line-height:1.25; margin:0 0 6px; }
+  .ipa{ font-size:15px; color:var(--amber-deep); margin:0 0 26px; font-weight:500; }
+
+  .choices{ display:flex; flex-direction:column; gap:10px; }
+  .choice-btn{
+    text-align:left; background:var(--card); border:1.5px solid var(--ink); border-radius:5px;
+    padding:13px 16px; font-family:var(--sans); font-size:15px; color:var(--ink); cursor:pointer;
+    transition:background .15s ease;
+  }
+  .choice-btn:hover:not(:disabled){ background:#f1ede1; }
+  .choice-btn:disabled{ cursor:default; }
+  .choice-btn.correct{ background:var(--good-bg); border-color:var(--good); color:var(--good); font-weight:600; }
+  .choice-btn.wrong{ background:var(--bad-bg); border-color:var(--bad); color:var(--bad); font-weight:600; }
+
+  .feedback{ margin-top:20px; padding-top:18px; border-top:1px dashed var(--line); display:none; }
+  .feedback.show{ display:block; }
+  .fb-verdict{ font-weight:700; font-size:15px; margin-bottom:8px; }
+  .fb-verdict.good{ color:var(--good); }
+  .fb-verdict.bad{ color:var(--bad); }
+  .fb-meaning{ font-size:15px; }
+  .fb-example{ font-size:14px; color:var(--ink-soft); font-style:italic; margin-top:6px; }
+  .next-btn{
+    margin-top:20px; width:100%; font-family:var(--sans); font-weight:700; font-size:15px;
+    padding:13px; background:var(--amber); color:#2a1c02; border:none; border-radius:5px; cursor:pointer;
+  }
+  .next-btn:hover{ background:var(--amber-deep); color:#fff; }
+
+  .results h2{ font-family:var(--serif); font-size:28px; margin:0 0 6px; }
+  .score-big{ font-family:var(--serif); font-size:56px; font-weight:700; color:var(--amber-deep); margin:14px 0 4px; }
+  .score-sub{ color:var(--ink-soft); font-size:14px; margin-bottom:26px; }
+  .review-list{ list-style:none; padding:0; margin:0 0 24px; display:flex; flex-direction:column; gap:10px; }
+  .review-list li{ border-left:3px solid var(--bad); padding:8px 14px; background:var(--bad-bg); border-radius:0 4px 4px 0; font-size:14px; }
+  .review-list li b{ font-family:var(--serif); font-size:15px; }
+  .no-wrong{ font-size:14px; color:var(--good); margin-bottom:24px; }
+  .restart-btn{
+    width:100%; font-family:var(--sans); font-weight:700; font-size:15px; padding:14px;
+    background:var(--ink); color:var(--paper); border:none; border-radius:5px; cursor:pointer;
+  }
+
+  @media (max-width:480px){
+    .card{ padding:24px 18px; }
+    .term{ font-size:22px; }
+    .score-big{ font-size:44px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>Từ vựng: Cities in the future (Phần 3)</h1>
+    <span class="tag" id="counterTag">1 / 60</span>
+  </header>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="card" id="quizCard"></div>
+</div>
+
+<script>
+const VOCAB = [
+{term:"pace of life",ipa:"/peɪs əv laɪf/",meaning:"nhịp sống",example:"The pace of life in big cities is very fast."},
+{term:"urban life",ipa:"/ˈɜːrbən laɪf/",meaning:"cuộc sống đô thị",example:"Urban life offers many conveniences but also stress."},
+{term:"reflect on",ipa:"/rɪˈflekt ɒn/",meaning:"suy ngẫm về",example:"We should reflect on how technology has changed our lives."},
+{term:"evolve",ipa:"/ɪˈvɒlv/",meaning:"phát triển, thay đổi theo thời gian",example:"Cities continue to evolve with new technology."},
+{term:"influence daily living",ipa:"/ˈɪnfluəns ˈdeɪli ˈlɪvɪŋ/",meaning:"ảnh hưởng đến cuộc sống hằng ngày",example:"Smart devices influence daily living in many ways."},
+{term:"overwhelming",ipa:"/ˌoʊvərˈwelmɪŋ/",meaning:"quá tải, choáng ngợp",example:"The traffic in the city can be overwhelming."},
+{term:"vibrant energy",ipa:"/ˈvaɪbrənt ˈenərdʒi/",meaning:"nguồn năng lượng sống động",example:"The city center is full of vibrant energy at night."},
+{term:"recognize the unique aspects of",ipa:"/ˈrekəɡnaɪz ðə juˈniːk ˈæspekts əv/",meaning:"nhận ra những khía cạnh đặc trưng của",example:"Tourists recognize the unique aspects of this old town."},
+{term:"appreciate",ipa:"/əˈpriːʃieɪt/",meaning:"trân trọng, đánh giá cao",example:"We should appreciate the convenience of modern life."},
+{term:"previous experiences",ipa:"/ˈpriːviəs ɪkˈspɪriənsɪz/",meaning:"những trải nghiệm trước đây",example:"Her previous experiences shaped her view of the city."},
+{term:"technology-driven lifestyle",ipa:"/tekˈnɒlədʒi ˈdrɪvn ˈlaɪfstaɪl/",meaning:"lối sống bị chi phối bởi công nghệ",example:"Many young people now have a technology-driven lifestyle."},
+{term:"revolutionize urban living",ipa:"/ˌrevəˈluːʃənaɪz ˈɜːrbən ˈlɪvɪŋ/",meaning:"cách mạng hóa cuộc sống đô thị",example:"Smart technology could revolutionize urban living."},
+{term:"the implementation of",ipa:"/ðə ˌɪmplɪmenˈteɪʃn əv/",meaning:"việc triển khai/áp dụng",example:"The implementation of new traffic rules reduced accidents."},
+{term:"smart energy systems",ipa:"/smɑːrt ˈenərdʒi ˈsɪstəmz/",meaning:"hệ thống năng lượng thông minh",example:"Smart energy systems help save electricity."},
+{term:"be managed through",ipa:"/biː ˈmænɪdʒd θruː/",meaning:"được quản lý thông qua",example:"Traffic flow is managed through smart sensors."},
+{term:"intelligent grids",ipa:"/ɪnˈtelɪdʒənt ɡrɪdz/",meaning:"lưới điện thông minh",example:"Intelligent grids distribute electricity more efficiently."},
+{term:"monitor and distribute resources",ipa:"/ˈmɒnɪtər ənd dɪˈstrɪbjuːt ˈriːsɔːrsɪz/",meaning:"giám sát và phân phối nguồn tài nguyên",example:"The system can monitor and distribute resources automatically."},
+{term:"the integration of",ipa:"/ðə ˌɪntɪˈɡreɪʃn əv/",meaning:"sự tích hợp/kết hợp của",example:"The integration of solar panels reduced energy costs."},
+{term:"renewable energy sources",ipa:"/rɪˈnuːəbl ˈenərdʒi ˈsɔːrsɪz/",meaning:"các nguồn năng lượng tái tạo",example:"The city relies more on renewable energy sources now."},
+{term:"ensure a stable and sustainable energy supply",ipa:"/ɪnˈʃʊr ə ˈsteɪbl ənd səˈsteɪnəbl ˈenərdʒi səˈplaɪ/",meaning:"đảm bảo nguồn cung năng lượng ổn định và bền vững",example:"The new plant will ensure a stable and sustainable energy supply."},
+{term:"advanced energy-efficient systems",ipa:"/ədˈvænst ˈenərdʒi ɪˈfɪʃnt ˈsɪstəmz/",meaning:"các hệ thống tiên tiến tiết kiệm năng lượng",example:"Advanced energy-efficient systems are used in the new buildings."},
+{term:"automatically adjust",ipa:"/ˌɔːtəˈmætɪkli əˈdʒʌst/",meaning:"tự động điều chỉnh",example:"The thermostat can automatically adjust the temperature."},
+{term:"significantly reduce energy consumption",ipa:"/sɪɡˈnɪfɪkəntli rɪˈdjuːs ˈenərdʒi kənˈsʌmpʃn/",meaning:"giảm đáng kể mức tiêu thụ năng lượng",example:"LED lights significantly reduce energy consumption."},
+{term:"the shift towards electric vehicles",ipa:"/ðə ʃɪft təˈwɔːrdz ɪˈlektrɪk ˈviːəklz/",meaning:"xu hướng chuyển sang xe điện",example:"The shift towards electric vehicles is growing rapidly."},
+{term:"off-peak hours",ipa:"/ɒf piːk ˈaʊərz/",meaning:"giờ thấp điểm",example:"Electricity is cheaper during off-peak hours."},
+{term:"optimize energy use",ipa:"/ˈɒptɪmaɪz ˈenərdʒi juːs/",meaning:"tối ưu hóa việc sử dụng năng lượng",example:"Smart meters help optimize energy use at home."},
+{term:"balance the grid",ipa:"/ˈbæləns ðə ɡrɪd/",meaning:"cân bằng lưới điện",example:"Battery storage helps balance the grid during peak demand."},
+{term:"focus on creating policies",ipa:"/ˈfoʊkəs ɒn kriˈeɪtɪŋ ˈpɒləsiz/",meaning:"tập trung vào việc xây dựng chính sách",example:"The government should focus on creating policies for clean energy."},
+{term:"encourage residents to adopt",ipa:"/ɪnˈkɜːrɪdʒ ˈrezɪdənts tuː əˈdɒpt/",meaning:"khuyến khích cư dân áp dụng",example:"The city encourages residents to adopt greener habits."},
+{term:"green technologies",ipa:"/ɡriːn tekˈnɒlədʒiz/",meaning:"công nghệ xanh",example:"Green technologies are becoming more affordable."},
+{term:"energy-saving practices",ipa:"/ˈenərdʒi ˈseɪvɪŋ ˈpræktɪsɪz/",meaning:"các biện pháp tiết kiệm năng lượng",example:"Schools are teaching energy-saving practices to students."},
+{term:"a concerted effort",ipa:"/ə kənˈsɜːrtɪd ˈefərt/",meaning:"một nỗ lực phối hợp, đồng bộ",example:"It took a concerted effort to reduce the city's pollution."},
+{term:"a considerable degree of coordination",ipa:"/ə kənˈsɪdərəbl dɪˈɡriː əv koʊˌɔːrdɪˈneɪʃn/",meaning:"mức độ phối hợp đáng kể",example:"The project required a considerable degree of coordination."},
+{term:"the payoff",ipa:"/ðə ˈpeɪɒf/",meaning:"lợi ích/kết quả thu được từ một nỗ lực",example:"The payoff of investing in clean energy is a healthier city."},
+{term:"a substantial reduction in",ipa:"/ə səbˈstænʃl rɪˈdʌkʃn ɪn/",meaning:"sự giảm đáng kể về",example:"There was a substantial reduction in traffic accidents last year."},
+{term:"carbon emissions",ipa:"/ˈkɑːrbən ɪˈmɪʃnz/",meaning:"khí thải carbon",example:"The city aims to cut carbon emissions by half."},
+{term:"megacity",ipa:"/ˈmeɡəˌsɪti/",meaning:"siêu đô thị",example:"Tokyo is one of the largest megacities in the world."},
+{term:"a critical focus for",ipa:"/ə ˈkrɪtɪkl ˈfoʊkəs fɔːr/",meaning:"một trọng tâm quan trọng đối với",example:"Clean water has become a critical focus for city planners."},
+{term:"populations exceeding one million",ipa:"/ˌpɒpjuˈleɪʃnz ɪkˈsiːdɪŋ wʌn ˈmɪljən/",meaning:"dân số vượt quá một triệu người",example:"Several cities have populations exceeding one million."},
+{term:"face unique challenges and opportunities",ipa:"/feɪs juˈniːk ˈtʃælɪndʒɪz ənd ˌɒpərˈtuːnətiz/",meaning:"đối mặt với những thách thức và cơ hội riêng biệt",example:"Megacities face unique challenges and opportunities."},
+{term:"innovative strategies",ipa:"/ˈɪnəveɪtɪv ˈstrætədʒiz/",meaning:"các chiến lược đổi mới/sáng tạo",example:"The city adopted innovative strategies to fight pollution."},
+{term:"address an issue",ipa:"/əˈdres ən ˈɪʃuː/",meaning:"giải quyết một vấn đề",example:"New laws were passed to address an issue of housing shortage."},
+{term:"environmental sustainability",ipa:"/ɪnˌvaɪrənˈmentl səˌsteɪnəˈbɪləti/",meaning:"tính bền vững về môi trường",example:"Environmental sustainability is a top priority for the city."},
+{term:"streamline the transportation network",ipa:"/ˈstriːmlaɪn ðə ˌtrænspɔːrˈteɪʃn ˈnetwɜːrk/",meaning:"tối ưu hóa mạng lưới giao thông",example:"The city plans to streamline the transportation network."},
+{term:"revitalize the housing sector",ipa:"/riːˈvaɪtəlaɪz ðə ˈhaʊzɪŋ ˈsektər/",meaning:"vực dậy/cải thiện lĩnh vực nhà ở",example:"New investment will revitalize the housing sector."},
+{term:"incorporate green building practices",ipa:"/ɪnˈkɔːrpəreɪt ɡriːn ˈbɪldɪŋ ˈpræktɪsɪz/",meaning:"áp dụng các phương thức xây dựng xanh",example:"Architects now incorporate green building practices."},
+{term:"affordable housing initiatives",ipa:"/əˈfɔːrdəbl ˈhaʊzɪŋ ɪˈnɪʃətɪvz/",meaning:"các sáng kiến về nhà ở giá phải chăng",example:"The city launched affordable housing initiatives for low-income families."},
+{term:"waste management system",ipa:"/weɪst ˈmænɪdʒmənt ˈsɪstəm/",meaning:"hệ thống quản lý chất thải",example:"The new waste management system reduced landfill waste."},
+{term:"tackle pollution and environmental degradation",ipa:"/ˈtækl pəˈluːʃn ənd ɪnˌvaɪrənˈmentl ˌdeɡrəˈdeɪʃn/",meaning:"giải quyết ô nhiễm và suy thoái môi trường",example:"The plan aims to tackle pollution and environmental degradation."},
+{term:"struggle with",ipa:"/ˈstrʌɡl wɪð/",meaning:"chật vật/đau đầu đối phó với",example:"Many cities struggle with traffic congestion."},
+{term:"strain existing resources and services",ipa:"/streɪn ɪɡˈzɪstɪŋ ˈriːsɔːrsɪz ənd ˈsɜːrvɪsɪz/",meaning:"gây áp lực lên các nguồn lực và dịch vụ hiện có",example:"Rapid growth can strain existing resources and services."},
+{term:"expand public transportation systems",ipa:"/ɪkˈspænd ˈpʌblɪk ˌtrænspɔːrˈteɪʃn ˈsɪstəmz/",meaning:"mở rộng hệ thống giao thông công cộng",example:"The city plans to expand public transportation systems."},
+{term:"enhance green spaces",ipa:"/ɪnˈhæns ɡriːn ˈspeɪsɪz/",meaning:"tăng cường/mở rộng không gian xanh",example:"The council wants to enhance green spaces in the downtown area."},
+{term:"invest in renewable energy sources",ipa:"/ɪnˈvest ɪn rɪˈnuːəbl ˈenərdʒi ˈsɔːrsɪz/",meaning:"đầu tư vào các nguồn năng lượng tái tạo",example:"The company decided to invest in renewable energy sources."},
+{term:"support growing populations",ipa:"/səˈpɔːrt ˈɡroʊɪŋ ˌpɒpjuˈleɪʃnz/",meaning:"đáp ứng dân số đang gia tăng",example:"New infrastructure is needed to support growing populations."},
+{term:"depend on one's ability to + V",ipa:"/dɪˈpend ɒn wʌnz əˈbɪləti tuː/",meaning:"phụ thuộc vào khả năng của ai trong việc…",example:"Success depends on one's ability to adapt."},
+{term:"express concern that + clause",ipa:"/ɪkˈspres kənˈsɜːrn ðæt/",meaning:"bày tỏ lo ngại rằng…",example:"Experts express concern that pollution levels are rising."},
+{term:"anticipate + N/V-ing",ipa:"/ænˈtɪsɪpeɪt/",meaning:"dự đoán/lường trước điều gì",example:"Planners anticipate a rise in electric vehicle use."},
+{term:"dwell on the negatives",ipa:"/dwel ɒn ðə ˈneɡətɪvz/",meaning:"quá tập trung/suy nghĩ mãi về những mặt tiêu cực",example:"Try not to dwell on the negatives of city life."},
+{term:"play a crucial role in shaping future cities",ipa:"/pleɪ ə ˈkruːʃl roʊl ɪn ˈʃeɪpɪŋ ˈfjuːtʃər ˈsɪtiz/",meaning:"đóng vai trò then chốt trong việc định hình các thành phố tương lai",example:"Technology will play a crucial role in shaping future cities."}
+];
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+let order = [];
+let current = 0;
+let score = 0;
+let wrongItems = [];
+let answered = false;
+
+function startQuiz(){
+  order = shuffle(VOCAB);
+  current = 0;
+  score = 0;
+  wrongItems = [];
+  renderQuestion();
+}
+
+function buildChoices(correctItem){
+  const pool = VOCAB.filter(v=>v.meaning!==correctItem.meaning);
+  const distractors = shuffle(pool).slice(0,3).map(v=>v.meaning);
+  return shuffle([correctItem.meaning, ...distractors]);
+}
+
+function renderQuestion(){
+  answered = false;
+  const total = order.length;
+  document.getElementById('counterTag').textContent = (current+1)+" / "+total;
+  document.getElementById('progressFill').style.width = ((current)/total*100)+"%";
+
+  const item = order[current];
+  const card = document.getElementById('quizCard');
+
+  let bodyHtml = `
+    <div class="qmeta"><span>Câu ${current+1} / ${total}</span></div>
+    <div class="prompt-label">Cụm từ này có nghĩa là gì?</div>
+    <div class="term">${item.term}</div>
+    <div class="ipa">${item.ipa}</div>
+    <div class="choices" id="choicesBox">
+  `;
+  const choices = buildChoices(item);
+  choices.forEach(c=>{
+    bodyHtml += `<button class="choice-btn" data-answer="${encodeURIComponent(c)}" onclick="handleChoice(this)">${c}</button>`;
+  });
+  bodyHtml += `</div><div class="feedback" id="feedbackBox"></div>`;
+
+  card.innerHTML = bodyHtml;
+}
+
+function showFeedback(isCorrect, item){
+  const fb = document.getElementById('feedbackBox');
+  fb.classList.add('show');
+  fb.innerHTML = `
+    <div class="fb-verdict ${isCorrect?'good':'bad'}">${isCorrect ? 'Chính xác!' : 'Chưa đúng.'}</div>
+    <div class="fb-meaning">Nghĩa đúng: <strong>${item.meaning}</strong></div>
+    <div class="fb-example">Ví dụ: ${item.example}</div>
+  `;
+  const btn = document.createElement('button');
+  btn.className = 'next-btn';
+  btn.textContent = (current === order.length-1) ? 'Xem kết quả' : 'Câu tiếp theo';
+  btn.onclick = goNext;
+  fb.appendChild(btn);
+}
+
+function handleChoice(btn){
+  if(answered) return;
+  answered = true;
+  const item = order[current];
+  const chosen = decodeURIComponent(btn.getAttribute('data-answer'));
+  const isCorrect = chosen === item.meaning;
+
+  document.querySelectorAll('.choice-btn').forEach(b=>{
+    b.disabled = true;
+    const val = decodeURIComponent(b.getAttribute('data-answer'));
+    if(val === item.meaning) b.classList.add('correct');
+    else if(b===btn) b.classList.add('wrong');
+  });
+
+  if(isCorrect) score++;
+  else wrongItems.push(item);
+
+  showFeedback(isCorrect, item);
+}
+
+function goNext(){
+  if(current === order.length-1){
+    renderResults();
+  } else {
+    current++;
+    renderQuestion();
+  }
+}
+
+function renderResults(){
+  document.getElementById('progressFill').style.width = "100%";
+  document.getElementById('counterTag').textContent = order.length+" / "+order.length;
+  const total = order.length;
+  const pct = Math.round(score/total*100);
+
+  let html = `
+    <div class="results">
+      <h2>Hoàn thành!</h2>
+      <div class="score-big">${score}/${total}</div>
+      <div class="score-sub">Bạn đã trả lời đúng ${pct}% số câu hỏi.</div>
+  `;
+
+  if(wrongItems.length === 0){
+    html += `<div class="no-wrong">Xuất sắc! Không có câu nào sai.</div>`;
+  } else {
+    html += `<ul class="review-list">`;
+    wrongItems.forEach(item=>{
+      html += `<li><b>${item.term}</b> — ${item.meaning}</li>`;
+    });
+    html += `</ul>`;
+  }
+
+  html += `<button class="restart-btn" onclick="startQuiz()">Làm lại từ đầu</button></div>`;
+
+  document.getElementById('quizCard').innerHTML = html;
+}
+
+startQuiz();
+</script>
+</body>
+</html>
